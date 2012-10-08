@@ -13,17 +13,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 (function($) {
 	
-	var dragging = false;
-
 	$.fn.splitPane = function() {
 		this.each(function(){
 			setMinHeightAndMinWidth(this);
 			parentresizeHandler.apply(this);
-			$(this).bind('_splitpaneparentresize', parentresizeHandler);
 		});
+		this.bind('_splitpaneparentresize', parentresizeHandler);
 		this.append('<div class="split-pane-resize-shim">');
 		this.children('.split-pane-divider').bind('mousedown', mousedownHandler);
-	}
+	};
 
 	var SPLITPANERESIZE_HANDLER = '_splitpaneparentresizeHandler';
 
@@ -41,11 +39,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 				}
 			});
 			$(parent).bind('resize', $(this).data(SPLITPANERESIZE_HANDLER));
-	    },
-	    teardown: function(namespaces) {
+		},
+		teardown: function(namespaces) {
 			var parent = $(this).parent().closest('.split-pane').get(0) || window;
 			$(parent).unbind('resize', $(this).data(SPLITPANERESIZE_HANDLER));
-	    	$(this).removeData(SPLITPANERESIZE_HANDLER);
+			$(this).removeData(SPLITPANERESIZE_HANDLER);
 		}
 	};
 
@@ -135,7 +133,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	function createMousemove($splitPane, pageX, pageY) {
 		var $firstComponent = $splitPane.children('.split-pane-component:first'),
 			$divider = $splitPane.children('.split-pane-divider'),
-			$lastComponent = $splitPane.children('.split-pane-component:last');
+			$lastComponent = $splitPane.children('.split-pane-component:last'),
 			parentHeight = $divider.parent().height(),
 			parentWidth = $divider.parent().width(),
 			dividerWidth = $divider.width(),

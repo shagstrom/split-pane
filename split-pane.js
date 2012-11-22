@@ -83,41 +83,41 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 		if ($splitPane.is('.fixed-top')) {
 			var maxfirstComponentHeight = $splitPane.height() - minHeight($lastComponent) - $divider.height();
 			if ($firstComponent.height() > maxfirstComponentHeight) {
-				setTop($firstComponent, $divider, $lastComponent, maxfirstComponentHeight + 'px');
+				setTop($splitPane, $firstComponent, $divider, $lastComponent, maxfirstComponentHeight + 'px');
 			};
 		} else if ($splitPane.is('.fixed-bottom')) {
 			var maxLastComponentHeight = $splitPane.height() - minHeight($firstComponent) - $divider.height();
 			if ($lastComponent.height() > maxLastComponentHeight) {
-				setBottom($firstComponent, $divider, $lastComponent, maxLastComponentHeight + 'px')
+				setBottom($splitPane, $firstComponent, $divider, $lastComponent, maxLastComponentHeight + 'px')
 			}
 		} else if ($splitPane.is('.horizontal-percent')) {
 			var maxLastComponentHeight = $splitPane.height() - minHeight($firstComponent) - $divider.height();
 			if ($lastComponent.height() > maxLastComponentHeight) {
-				setBottom($firstComponent, $divider, $lastComponent, (maxLastComponentHeight / $splitPane.height() * 100) + '%');
+				setBottom($splitPane, $firstComponent, $divider, $lastComponent, (maxLastComponentHeight / $splitPane.height() * 100) + '%');
 			} else {
 				var lastComponentMinHeight = minHeight($lastComponent);
 				if ($splitPane.height() - $firstComponent.height() - $divider.height() < lastComponentMinHeight) {
-					setBottom($firstComponent, $divider, $lastComponent, (lastComponentMinHeight / $splitPane.height() * 100) + '%');
+					setBottom($splitPane, $firstComponent, $divider, $lastComponent, (lastComponentMinHeight / $splitPane.height() * 100) + '%');
 				}
 			}
 		} else if ($splitPane.is('.fixed-left')) {
 			var maxFirstComponentWidth = $splitPane.width() - minWidth($lastComponent) - $divider.width();
 			if ($firstComponent.width() > maxFirstComponentWidth) {
-				setLeft($firstComponent, $divider, $lastComponent, maxFirstComponentWidth + 'px');
+				setLeft($splitPane, $firstComponent, $divider, $lastComponent, maxFirstComponentWidth + 'px');
 			};
 		} else if ($splitPane.is('.fixed-right')) {
 			var maxLastComponentWidth = $splitPane.width() - minWidth($firstComponent) - $divider.width();
 			if ($lastComponent.width() > maxLastComponentWidth) {
-				setRight($firstComponent, $divider, $lastComponent, maxLastComponentWidth + 'px')
+				setRight($splitPane, $firstComponent, $divider, $lastComponent, maxLastComponentWidth + 'px')
 			}
 		} else if ($splitPane.is('.vertical-percent')) {
 			var maxLastComponentWidth = $splitPane.width() - minWidth($firstComponent) - $divider.width();
 			if ($lastComponent.width() > maxLastComponentWidth) {
-				setRight($firstComponent, $divider, $lastComponent, (maxLastComponentWidth / $splitPane.width() * 100) + '%');
+				setRight($splitPane, $firstComponent, $divider, $lastComponent, (maxLastComponentWidth / $splitPane.width() * 100) + '%');
 			} else {
 				var lastComponentMinWidth = minWidth($lastComponent);
 				if ($splitPane.width() - $firstComponent.width() - $divider.width() < lastComponentMinWidth) {
-					setRight($firstComponent, $divider, $lastComponent, (lastComponentMinWidth / $splitPane.width() * 100) + '%');
+					setRight($splitPane, $firstComponent, $divider, $lastComponent, (lastComponentMinWidth / $splitPane.width() * 100) + '%');
 				}
 			}
 		}

@@ -31,8 +31,8 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	 */
 	jQuery.event.special._splitpaneparentresize = {
 		setup: function(data, namespaces) {
-			var element = this;
-			var parent = $(this).parent().closest('.split-pane')[0] || window;
+			var element = this,
+				parent = $(this).parent().closest('.split-pane')[0] || window;
 			$(this).data(SPLITPANERESIZE_HANDLER, function(event) {
 				var target = event.target === document ? window : event.target;
 				if (target === parent) {
@@ -65,13 +65,12 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 
 	function mousedownHandler(event) {
 		event.preventDefault();
-		var $resizeShim = $(this).siblings('.split-pane-resize-shim').show();
-		var mousemove = createMousemove($(this).parent(), event.pageX, event.pageY);
+		var $resizeShim = $(this).siblings('.split-pane-resize-shim').show(),
+			mousemove = createMousemove($(this).parent(), event.pageX, event.pageY);
 		$(document).mousemove(mousemove);
 		$(document).one('mouseup', function(event) {
-			$resizeShim.hide();
 			$(document).unbind('mousemove', mousemove);
-			mousemove(event);
+			$resizeShim.hide();
 		});
 	}
 
@@ -84,11 +83,15 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 			var maxfirstComponentHeight = $splitPane.height() - minHeight($lastComponent) - $divider.height();
 			if ($firstComponent.height() > maxfirstComponentHeight) {
 				setTop($splitPane, $firstComponent, $divider, $lastComponent, maxfirstComponentHeight + 'px');
-			};
+			} else {
+				$splitPane.resize();
+			}
 		} else if ($splitPane.is('.fixed-bottom')) {
 			var maxLastComponentHeight = $splitPane.height() - minHeight($firstComponent) - $divider.height();
 			if ($lastComponent.height() > maxLastComponentHeight) {
 				setBottom($splitPane, $firstComponent, $divider, $lastComponent, maxLastComponentHeight + 'px')
+			} else {
+				$splitPane.resize();
 			}
 		} else if ($splitPane.is('.horizontal-percent')) {
 			var maxLastComponentHeight = $splitPane.height() - minHeight($firstComponent) - $divider.height();
@@ -98,17 +101,23 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				var lastComponentMinHeight = minHeight($lastComponent);
 				if ($splitPane.height() - $firstComponent.height() - $divider.height() < lastComponentMinHeight) {
 					setBottom($splitPane, $firstComponent, $divider, $lastComponent, (lastComponentMinHeight / $splitPane.height() * 100) + '%');
+				} else {
+					$splitPane.resize();
 				}
 			}
 		} else if ($splitPane.is('.fixed-left')) {
 			var maxFirstComponentWidth = $splitPane.width() - minWidth($lastComponent) - $divider.width();
 			if ($firstComponent.width() > maxFirstComponentWidth) {
 				setLeft($splitPane, $firstComponent, $divider, $lastComponent, maxFirstComponentWidth + 'px');
-			};
+			} else {
+				$splitPane.resize();
+			}
 		} else if ($splitPane.is('.fixed-right')) {
 			var maxLastComponentWidth = $splitPane.width() - minWidth($firstComponent) - $divider.width();
 			if ($lastComponent.width() > maxLastComponentWidth) {
 				setRight($splitPane, $firstComponent, $divider, $lastComponent, maxLastComponentWidth + 'px')
+			} else {
+				$splitPane.resize();
 			}
 		} else if ($splitPane.is('.vertical-percent')) {
 			var maxLastComponentWidth = $splitPane.width() - minWidth($firstComponent) - $divider.width();
@@ -118,6 +127,8 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				var lastComponentMinWidth = minWidth($lastComponent);
 				if ($splitPane.width() - $firstComponent.width() - $divider.width() < lastComponentMinWidth) {
 					setRight($splitPane, $firstComponent, $divider, $lastComponent, (lastComponentMinWidth / $splitPane.width() * 100) + '%');
+				} else {
+					$splitPane.resize();
 				}
 			}
 		}

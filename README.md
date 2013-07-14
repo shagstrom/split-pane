@@ -14,7 +14,7 @@ As you can see, I'm setting up component widths and divider position using css, 
       <head>
     		<title>Basic Example</title>
     		<link rel="stylesheet" href="split-pane.css" />
-    		<script src="jquery-1.8.2.js"></script>
+    		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     		<script src="split-pane.js"></script>
     		<style type="text/css">
     			html, body {

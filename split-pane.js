@@ -37,7 +37,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				var target = event.target === document ? window : event.target;
 				if (target === parent) {
 					event.type = "_splitpaneparentresize";
-					jQuery.event.handle.apply(element, arguments);
+					jQuery.event.dispatch.apply(element, arguments);
 				} else {
 					event.stopPropagation();
 				}

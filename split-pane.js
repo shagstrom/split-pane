@@ -10,11 +10,12 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 */
 (function($) {
 	
+	var touchSupported = ('ontouchend' in document);
 	$.fn.splitPane = function() {
 		var $splitPanes = this;
 		$splitPanes.each(setMinHeightAndMinWidth);
 		$splitPanes.append('<div class="split-pane-resize-shim">');
-		$splitPanes.children('.split-pane-divider').bind('mousedown', mousedownHandler);
+		$splitPanes.children('.split-pane-divider').bind('mousedown touchstart', mousedownHandler);
 		setTimeout(function() {
 			// Doing this later because of an issue with Chrome (v23.0.1271.64) returning split-pane width = 0
 			// and triggering multiple resize events when page is being opened from an <a target="_blank"> .
@@ -67,11 +68,20 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 
 	function mousedownHandler(event) {
 		event.preventDefault();
-		var $resizeShim = $(this).siblings('.split-pane-resize-shim').show(),
-			mousemove = createMousemove($(this).parent(), event.pageX, event.pageY);
-		$(document).mousemove(mousemove);
-		$(document).one('mouseup', function(event) {
-			$(document).unbind('mousemove', mousemove);
+		var isTouchEvent = event.type.match(/^touch/),
+			moveEvent = isTouchEvent ? 'touchmove.splitPane' : 'mousemove.splitPane',
+			endEvent = isTouchEvent? 'touchend.splitPane' : 'mouseup.splitPane',
+			$divider = $(this),
+			$resizeShim = $divider.siblings('.split-pane-resize-shim');
+		$resizeShim.show();
+		$divider.addClass('dragged');
+		if (isTouchEvent) {
+			$divider.addClass('touch');
+		}
+		$(document).on(moveEvent, createMousemove($divider.parent(), pageXof(event), pageYof(event)));
+		$(document).one(endEvent, function(event) {
+			$(document).unbind(moveEvent);
+			$divider.removeClass('dragged touch');
 			$resizeShim.hide();
 		});
 	}
@@ -159,7 +169,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				topOffset = divider.offsetTop - pageY;
 			return function(event) {
 				event.preventDefault();
-				var top = Math.min(Math.max(firstComponentMinHeight, topOffset + event.pageY), maxFirstComponentHeight);
+				var top = Math.min(Math.max(firstComponentMinHeight, topOffset + pageYof(event)), maxFirstComponentHeight);
 				setTop(firstComponent, divider, lastComponent, top + 'px');
 				$splitPane.resize();
 			};
@@ -169,7 +179,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				bottomOffset = lastComponent.offsetHeight + pageY;
 			return function(event) {
 				event.preventDefault();
-				var bottom = Math.min(Math.max(lastComponentMinHeight, bottomOffset - event.pageY), maxLastComponentHeight);
+				var bottom = Math.min(Math.max(lastComponentMinHeight, bottomOffset - pageYof(event)), maxLastComponentHeight);
 				setBottom(firstComponent, divider, lastComponent, bottom + 'px');
 				$splitPane.resize();
 			};
@@ -180,7 +190,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				bottomOffset = lastComponent.offsetHeight + pageY;
 			return function(event) {
 				event.preventDefault();
-				var bottom = Math.min(Math.max(lastComponentMinHeight, bottomOffset - event.pageY), maxLastComponentHeight);
+				var bottom = Math.min(Math.max(lastComponentMinHeight, bottomOffset - pageYof(event)), maxLastComponentHeight);
 				setBottom(firstComponent, divider, lastComponent, (bottom / splitPaneHeight * 100) + '%');
 				$splitPane.resize();
 			};
@@ -190,7 +200,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				leftOffset = divider.offsetLeft - pageX;
 			return function(event) {
 				event.preventDefault();
-				var left = Math.min(Math.max(firstComponentMinWidth, leftOffset + event.pageX), maxFirstComponentWidth);
+				var left = Math.min(Math.max(firstComponentMinWidth, leftOffset + pageXof(event)), maxFirstComponentWidth);
 				setLeft(firstComponent, divider, lastComponent, left + 'px')
 				$splitPane.resize();
 			};
@@ -200,7 +210,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				rightOffset = lastComponent.offsetWidth + pageX;
 			return function(event) {
 				event.preventDefault();
-				var right = Math.min(Math.max(lastComponentMinWidth, rightOffset - event.pageX), maxLastComponentWidth);
+				var right = Math.min(Math.max(lastComponentMinWidth, rightOffset - pageXof(event)), maxLastComponentWidth);
 				setRight(firstComponent, divider, lastComponent, right + 'px');
 				$splitPane.resize();
 			};
@@ -211,11 +221,19 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				rightOffset = lastComponent.offsetWidth + pageX;
 			return function(event) {
 				event.preventDefault();
-				var right = Math.min(Math.max(lastComponentMinWidth, rightOffset - event.pageX), maxLastComponentWidth);
+				var right = Math.min(Math.max(lastComponentMinWidth, rightOffset - pageXof(event)), maxLastComponentWidth);
 				setRight(firstComponent, divider, lastComponent, (right / splitPaneWidth * 100) + '%');
 				$splitPane.resize();
 			};
 		}
+	}
+
+	function pageXof(event) {
+		return event.pageX || event.originalEvent.pageX;
+	}
+
+	function pageYof(event) {
+		return event.pageY || event.originalEvent.pageY;
 	}
 
 	function minHeight(element) {

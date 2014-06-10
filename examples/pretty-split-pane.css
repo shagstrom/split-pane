@@ -3,6 +3,11 @@ body {
 	font-size: 16pt;
 }
 
+.split-pane-divider.dragged.touch {
+	background: blue;
+	opacity: 0.25;
+}
+
 div.split-pane-frame {
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;

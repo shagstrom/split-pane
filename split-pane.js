@@ -10,7 +10,6 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 */
 (function($) {
 	
-	var touchSupported = ('ontouchend' in document);
 	$.fn.splitPane = function() {
 		var $splitPanes = this;
 		$splitPanes.each(setMinHeightAndMinWidth);
@@ -69,16 +68,17 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	function mousedownHandler(event) {
 		event.preventDefault();
 		var isTouchEvent = event.type.match(/^touch/),
-			moveEvent = isTouchEvent ? 'touchmove.splitPane' : 'mousemove.splitPane',
-			endEvent = isTouchEvent? 'touchend.splitPane' : 'mouseup.splitPane',
+			moveEvent = isTouchEvent ? 'touchmove' : 'mousemove',
+			endEvent = isTouchEvent? 'touchend' : 'mouseup',
 			$divider = $(this),
+			$splitPane = $divider.parent(),
 			$resizeShim = $divider.siblings('.split-pane-resize-shim');
 		$resizeShim.show();
 		$divider.addClass('dragged');
 		if (isTouchEvent) {
 			$divider.addClass('touch');
 		}
-		$(document).on(moveEvent, createMousemove($divider.parent(), pageXof(event), pageYof(event)));
+		$(document).on(moveEvent, createMousemove($splitPane, pageXof(event), pageYof(event)));
 		$(document).one(endEvent, function(event) {
 			$(document).unbind(moveEvent);
 			$divider.removeClass('dragged touch');

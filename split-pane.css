@@ -2,7 +2,7 @@
 
 Split Pane v0.4.0
 
-Copyright (c) 2012 Simon Hagström
+Copyright (c) 2014 Simon Hagström
 
 Released under the MIT license
 https://raw.github.com/shagstrom/split-pane/master/LICENSE

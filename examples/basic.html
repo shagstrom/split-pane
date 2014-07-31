@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<title>Basic Example</title>
-		<link rel="stylesheet" href="split-pane.css" />
-		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-		<script src="split-pane.js"></script>
+		<link rel="stylesheet" href="../split-pane.css" />
+		<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="../split-pane.js"></script>
 		<style type="text/css">
 			html, body {
 				height: 100%;
@@ -18,13 +20,13 @@
 			#left-component {
 				width: 20em;
 			}
-			#my-divider {
-				left: 20em;
+			#divider {
+				left: 20em; /* same as left component width */
 				width: 5px;
 			}
 			#right-component {
 				left: 20em;
-				margin-left: 5px;
+				margin-left: 5px; /* same as divider width */
 			}
 		</style>
 		<script>
@@ -34,11 +36,11 @@
 		</script>
 	</head>
 	<body>
-		<div class="split-pane fixed-left">
+		<div id="split-pane-1" class="split-pane fixed-left">
 			<div class="split-pane-component" id="left-component">
 				This is the left component
 			</div>
-			<div class="split-pane-divider" id="my-divider"></div>
+			<div class="split-pane-divider" id="divider"></div>
 			<div class="split-pane-component" id="right-component">
 				This is the right component
 			</div>

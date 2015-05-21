@@ -78,9 +78,10 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 		if (isTouchEvent) {
 			$divider.addClass('touch');
 		}
-		$(document).on(moveEvent, createMousemove($splitPane, pageXof(event), pageYof(event)));
+		var moveEventHandler = createMousemove($splitPane, pageXof(event), pageYof(event));
+		$(document).on(moveEvent, moveEventHandler);
 		$(document).one(endEvent, function(event) {
-			$(document).unbind(moveEvent);
+			$(document).unbind(moveEvent, moveEventHandler);
 			$divider.removeClass('dragged touch');
 			$resizeShim.hide();
 		});

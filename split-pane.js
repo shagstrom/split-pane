@@ -1,6 +1,6 @@
 /*!
 
-Split Pane v0.4.0
+Split Pane v0.4.1
 
 Copyright (c) 2014 Simon Hagström
 

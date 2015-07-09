@@ -6,7 +6,7 @@
 	background: silver;
 }
 
-.pretty-split-pane-frame > .split-pane > .split-pane-divider.dragged.touch {
+.pretty-split-pane-frame .split-pane > .split-pane-divider.dragged.touch {
 	background: blue;
 	opacity: 0.25;
 }

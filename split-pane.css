@@ -45,6 +45,18 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	z-index: 2;
 }
 
+.split-pane.fixed-top > .split-pane-divider > .split-pane-divider-inner,
+.split-pane.fixed-bottom > .split-pane-divider > .split-pane-divider-inner,
+.split-pane.horizontal-percent > .split-pane-divider > .split-pane-divider-inner {
+	position: absolute;
+	top: -5px;
+	left: 0;
+	box-sizing: content-box;
+	width: 100%;
+	height: 100%;
+	padding: 5px 0;
+}
+
 .split-pane.fixed-left > .split-pane-component,
 .split-pane.fixed-right > .split-pane-component,
 .split-pane.vertical-percent > .split-pane-component {
@@ -73,6 +85,18 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	cursor: ew-resize;
 	cursor: w-resize\9;
 	z-index: 2;
+}
+
+.split-pane.fixed-left > .split-pane-divider > .split-pane-divider-inner,
+.split-pane.fixed-right > .split-pane-divider > .split-pane-divider-inner,
+.split-pane.vertical-percent > .split-pane-divider > .split-pane-divider-inner {
+	position: absolute;
+	top: 0;
+	left: -5px;
+	box-sizing: content-box;
+	width: 100%;
+	height: 100%;
+	padding: 0 5px;
 }
 
 .split-pane-resize-shim {

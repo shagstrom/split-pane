@@ -14,7 +14,9 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 		var $splitPanes = this;
 		$splitPanes.each(setMinHeightAndMinWidth);
 		$splitPanes.append('<div class="split-pane-resize-shim">');
-		$splitPanes.children('.split-pane-divider').bind('mousedown touchstart', mousedownHandler);
+		var eventType = ('ontouchstart' in document) ? 'touchstart' : 'mousedown';
+		$splitPanes.children('.split-pane-divider').html('<div class="split-pane-divider-inner"></div>');
+		$splitPanes.children('.split-pane-divider').bind(eventType, mousedownHandler);
 		setTimeout(function() {
 			// Doing this later because of an issue with Chrome (v23.0.1271.64) returning split-pane width = 0
 			// and triggering multiple resize events when page is being opened from an <a target="_blank"> .

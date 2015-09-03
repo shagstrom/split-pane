@@ -33,7 +33,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	 * A special event that will "capture" a resize event from the parent split-pane or window.
 	 * The event will NOT propagate to grandchildren.
 	 */
-	jQuery.event.special._splitpaneparentresize = {
+	$.event.special._splitpaneparentresize = {
 		setup: function(data, namespaces) {
 			var element = this,
 				parent = $(this).parent().closest('.split-pane')[0] || window;
@@ -41,7 +41,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				var target = event.target === document ? window : event.target;
 				if (target === parent) {
 					event.type = "_splitpaneparentresize";
-					jQuery.event.dispatch.apply(element, arguments);
+					$.event.dispatch.apply(element, arguments);
 				} else {
 					event.stopPropagation();
 				}

@@ -4,7 +4,7 @@
     "split-pane.js",
     "split-pane.css"
   ],
-  "version": "0.5.0",
+  "version": "0.5.1",
   "homepage": "https://github.com/shagstrom/split-pane",
   "authors": [
     "Simon Hagström <simon.hagstrom@gmail.com>"
@@ -12,7 +12,7 @@
   "description": "jQuery Split Pane plugin",
   "license": "MIT",
   "dependencies": {
-    "jquery": "1.11.1"
+    "jquery": "~1.11.1"
   },
   "ignore": [
     "**/.*",

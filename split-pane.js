@@ -1,6 +1,6 @@
 /*!
 
-Split Pane v0.5.1
+Split Pane v0.5.2
 
 Copyright (c) 2014 Simon Hagström
 
@@ -232,11 +232,23 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	}
 
 	function pageXof(event) {
-		return event.pageX || event.originalEvent.pageX;
+		if (event.pageX !== undefined) {
+			return event.pageX;
+		} else if (event.originalEvent.pageX !== undefined) {
+			return event.originalEvent.pageX;
+		} else if (event.originalEvent.touches) {
+			return event.originalEvent.touches[0].pageX;
+		}
 	}
 
 	function pageYof(event) {
-		return event.pageY || event.originalEvent.pageY;
+		if (event.pageY !== undefined) {
+			return event.pageY;
+		} else if (event.originalEvent.pageY !== undefined) {
+			return event.originalEvent.pageY;
+		} else if (event.originalEvent.touches) {
+			return event.originalEvent.touches[0].pageY;
+		}
 	}
 
 	function minHeight(element) {

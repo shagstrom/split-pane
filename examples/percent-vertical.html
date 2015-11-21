@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 		<title>Frames</title>
 		<link rel="stylesheet" href="../split-pane.css" />
 		<!-- The style sheet below is not part of the split-pane plugin. Feel free to use it, or style things your own way. -->
@@ -38,6 +39,12 @@
 		<script>
 			$(function() {
 				$('div.split-pane').splitPane();
+				$('button:first').on('click', function() {
+					$('div.split-pane').splitPane('lastComponentSize', 0);
+				});
+				$('button:last').on('click', function() {
+					$('div.split-pane').splitPane('firstComponentSize', 0);
+				});
 			});
 		</script>
 	</head>
@@ -48,12 +55,14 @@
 					<div class="pretty-split-pane-component-inner"><!-- This div is added for styling purposes only. It's not part of the split-pane plugin. -->
 						<p>This split pane component width is in percent. <code>min-width</code> (<code>0px</code> in this exampe) will be respected</p>
 						<p>Re-size the window and move the divider to see the effect!</p>
+						<p><button>Collapse last component</button></p>
 					</div>
 				</div>
 				<div class="split-pane-divider" id="my-divider"></div>
 				<div class="split-pane-component" id="right-component">
 					<div class="pretty-split-pane-component-inner"><!-- This div is added for styling purposes only. It's not part of the split-pane plugin. -->
 						<p>This split pane component width is in percent. <code>min-width</code> (<code>0px</code> in this exampe) will be respected</p>
+						<p><button>Collapse first component</button></p>
 					</div>
 				</div>
 			</div>

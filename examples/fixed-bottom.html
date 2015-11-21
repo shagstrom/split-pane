@@ -21,7 +21,7 @@
 
 			#top-component {
 				bottom: 20em;
-				margin-bottom: 5px; 
+				margin-bottom: 5px;
 				min-height: 5em;
 			}
 
@@ -34,12 +34,18 @@
 				height: 20em;
 				min-height: 10em;
 			}
-			
+
 		</style>
 
 		<script>
 			$(function() {
 				$('div.split-pane').splitPane();
+				$('button:first').on('click', function() {
+					$('div.split-pane').splitPane('lastComponentSize', 300);
+				});
+				$('button:last').on('click', function() {
+					$('div.split-pane').splitPane('firstComponentSize', 200);
+				});
 			});
 		</script>
 
@@ -50,6 +56,7 @@
 				<div class="split-pane-component" id="top-component">
 					<div class="pretty-split-pane-component-inner"><!-- This div is added for styling purposes only. It's not part of the split-pane plugin. -->
 						<p>This split pane component is dynamic: when re-sizing the browser window, the height will adjust.</p>
+						<p><button>Set last component size to 300</button></p>
 					</div>
 				</div>
 				<div class="split-pane-divider" id="my-divider"></div>
@@ -63,6 +70,7 @@
 							You can, however, re-size this component by dragging the divider, and it will adjust if
 							the top component reaches it's <code>min-height</code> (<code>5em</code> in this example).
 						</p>
+						<p><button>Set first component size to 200</button></p>
 					</div>
 				</div>
 			</div>

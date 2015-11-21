@@ -8,9 +8,14 @@ Released under the MIT license
 https://raw.github.com/shagstrom/split-pane/master/LICENSE
 
 */
-(function($) {
-	
-	$.fn.splitPane = function() {
+
+(function ($) {
+
+	'use strict';
+
+	var methods = {};
+
+	methods.init = function() {
 		var $splitPanes = this;
 		$splitPanes.each(setMinHeightAndMinWidth);
 		$splitPanes.append('<div class="split-pane-resize-shim">');
@@ -25,6 +30,59 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 			});
 			$(window).trigger('resize');
 		}, 100);
+	};
+
+	methods.firstComponentSize = function(value) {
+		this.each(function() {
+			var $splitPane = $(this),
+				components = getComponents($splitPane);
+			if ($splitPane.is('.fixed-top')) {
+				fixedTopHandler(components, components.divider.offsetTop)({pageY: value});
+			} else if ($splitPane.is('.fixed-bottom')) {
+				value = components.splitPane.offsetHeight -components.divider.offsetHeight - value;
+				fixedBottomHandler(components, -components.last.offsetHeight)({pageY: -value});
+			} else if ($splitPane.is('.horizontal-percent')) {
+				value = components.splitPane.offsetHeight -components.divider.offsetHeight - value;
+				horizontalPercentHandler(components, -components.last.offsetHeight)({pageY: -value});
+			} else if ($splitPane.is('.fixed-left')) {
+				fixedLeftHandler(components, components.divider.offsetLeft)({pageX: value});
+			} else if ($splitPane.is('.fixed-right')) {
+				value = components.splitPane.offsetWidth -components.divider.offsetWidth - value;
+				fixedRightHandler(components, -components.last.offsetWidth)({pageX: -value});
+			} else if ($splitPane.is('.vertical-percent')) {
+				value = components.splitPane.offsetWidth -components.divider.offsetWidth - value;
+				verticalPercentHandler(components, -components.last.offsetWidth)({pageX: -value});
+			}
+		});
+	};
+
+	methods.lastComponentSize = function(value) {
+		this.each(function() {
+			var $splitPane = $(this),
+				components = getComponents($splitPane);
+			if ($splitPane.is('.fixed-top')) {
+				value = components.splitPane.offsetHeight -components.divider.offsetHeight - value;
+				fixedTopHandler(components, components.divider.offsetTop)({pageY: value});
+			} else if ($splitPane.is('.fixed-bottom')) {
+				fixedBottomHandler(components, -components.last.offsetHeight)({pageY: -value});
+			} else if ($splitPane.is('.horizontal-percent')) {
+				horizontalPercentHandler(components, -components.last.offsetHeight)({pageY: -value});
+			} else if ($splitPane.is('.fixed-left')) {
+				value = components.splitPane.offsetWidth -components.divider.offsetWidth - value;
+				fixedLeftHandler(components, components.divider.offsetLeft)({pageX: value});
+			} else if ($splitPane.is('.fixed-right')) {
+				fixedRightHandler(components, -components.last.offsetWidth)({pageX: -value});
+			} else if ($splitPane.is('.vertical-percent')) {
+				verticalPercentHandler(components, -components.last.offsetWidth)({pageX: -value});
+			}
+		});
+	};
+
+	$.fn.splitPane = function(method) {
+		if (!method) {
+			method = 'init';
+		}
+		methods[method].apply(this, Array.prototype.splice.call(arguments, 1));
 	};
 
 	var SPLITPANERESIZE_HANDLER = '_splitpaneparentresizeHandler';
@@ -68,7 +126,6 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	}
 
 	function mousedownHandler(event) {
-		event.preventDefault();
 		var isTouchEvent = event.type.match(/^touch/),
 			moveEvent = isTouchEvent ? 'touchmove' : 'mousemove',
 			endEvent = isTouchEvent? 'touchend' : 'mouseup',
@@ -162,73 +219,102 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	}
 
 	function createMousemove($splitPane, pageX, pageY) {
-		var splitPane = $splitPane[0],
-			firstComponent = $splitPane.children('.split-pane-component:first')[0],
-			divider = $splitPane.children('.split-pane-divider')[0],
-			lastComponent = $splitPane.children('.split-pane-component:last')[0];
+		var components = getComponents($splitPane);
 		if ($splitPane.is('.fixed-top')) {
-			var firstComponentMinHeight =  minHeight(firstComponent),
-				maxFirstComponentHeight = splitPane.offsetHeight - minHeight(lastComponent) - divider.offsetHeight,
-				topOffset = divider.offsetTop - pageY;
-			return function(event) {
-				event.preventDefault();
-				var top = Math.min(Math.max(firstComponentMinHeight, topOffset + pageYof(event)), maxFirstComponentHeight);
-				setTop(firstComponent, divider, lastComponent, top + 'px');
-				$splitPane.resize();
-			};
+			return fixedTopHandler(components, pageY);
 		} else if ($splitPane.is('.fixed-bottom')) {
-			var lastComponentMinHeight = minHeight(lastComponent),
-				maxLastComponentHeight = splitPane.offsetHeight - minHeight(firstComponent) - divider.offsetHeight,
-				bottomOffset = lastComponent.offsetHeight + pageY;
-			return function(event) {
-				event.preventDefault();
-				var bottom = Math.min(Math.max(lastComponentMinHeight, bottomOffset - pageYof(event)), maxLastComponentHeight);
-				setBottom(firstComponent, divider, lastComponent, bottom + 'px');
-				$splitPane.resize();
-			};
+			return fixedBottomHandler(components, pageY);
 		} else if ($splitPane.is('.horizontal-percent')) {
-			var splitPaneHeight = splitPane.offsetHeight,
-				lastComponentMinHeight = minHeight(lastComponent),
-				maxLastComponentHeight = splitPaneHeight - minHeight(firstComponent) - divider.offsetHeight,
-				bottomOffset = lastComponent.offsetHeight + pageY;
-			return function(event) {
-				event.preventDefault();
-				var bottom = Math.min(Math.max(lastComponentMinHeight, bottomOffset - pageYof(event)), maxLastComponentHeight);
-				setBottom(firstComponent, divider, lastComponent, (bottom / splitPaneHeight * 100) + '%');
-				$splitPane.resize();
-			};
+			return horizontalPercentHandler(components, pageY);
 		} else if ($splitPane.is('.fixed-left')) {
-			var firstComponentMinWidth = minWidth(firstComponent),
-				maxFirstComponentWidth = splitPane.offsetWidth - minWidth(lastComponent) - divider.offsetWidth,
-				leftOffset = divider.offsetLeft - pageX;
-			return function(event) {
-				event.preventDefault();
-				var left = Math.min(Math.max(firstComponentMinWidth, leftOffset + pageXof(event)), maxFirstComponentWidth);
-				setLeft(firstComponent, divider, lastComponent, left + 'px')
-				$splitPane.resize();
-			};
+			return fixedLeftHandler(components, pageX);
 		} else if ($splitPane.is('.fixed-right')) {
-			var lastComponentMinWidth = minWidth(lastComponent),
-				maxLastComponentWidth = splitPane.offsetWidth - minWidth(firstComponent) - divider.offsetWidth,
-				rightOffset = lastComponent.offsetWidth + pageX;
-			return function(event) {
-				event.preventDefault();
-				var right = Math.min(Math.max(lastComponentMinWidth, rightOffset - pageXof(event)), maxLastComponentWidth);
-				setRight(firstComponent, divider, lastComponent, right + 'px');
-				$splitPane.resize();
-			};
+			return fixedRightHandler(components, pageX);
 		} else if ($splitPane.is('.vertical-percent')) {
-			var splitPaneWidth = splitPane.offsetWidth,
-				lastComponentMinWidth = minWidth(lastComponent),
-				maxLastComponentWidth = splitPaneWidth - minWidth(firstComponent) - divider.offsetWidth,
-				rightOffset = lastComponent.offsetWidth + pageX;
-			return function(event) {
-				event.preventDefault();
-				var right = Math.min(Math.max(lastComponentMinWidth, rightOffset - pageXof(event)), maxLastComponentWidth);
-				setRight(firstComponent, divider, lastComponent, (right / splitPaneWidth * 100) + '%');
-				$splitPane.resize();
-			};
+			return verticalPercentHandler(components, pageX);
 		}
+	}
+
+	function fixedTopHandler(components, pageY) {
+		var firstComponentMinHeight =  minHeight(components.first),
+			maxFirstComponentHeight = components.splitPane.offsetHeight - minHeight(components.last) - components.divider.offsetHeight,
+			topOffset = components.divider.offsetTop - pageY;
+		return function(event) {
+			var top = newTop(firstComponentMinHeight, maxFirstComponentHeight, topOffset + pageYof(event));
+			setTop(components.first, components.divider, components.last, top + 'px');
+			$(components.splitPane).resize();
+		};
+	}
+
+	function fixedBottomHandler(components, pageY) {
+		var lastComponentMinHeight = minHeight(components.last),
+			maxLastComponentHeight = components.splitPane.offsetHeight - minHeight(components.first) - components.divider.offsetHeight,
+			bottomOffset = components.last.offsetHeight + pageY;
+		return function(event) {
+			event.preventDefault && event.preventDefault();
+			var bottom = Math.min(Math.max(lastComponentMinHeight, bottomOffset - pageYof(event)), maxLastComponentHeight);
+			setBottom(components.first, components.divider, components.last, bottom + 'px');
+			$(components.splitPane).resize();
+		};
+	}
+
+	function horizontalPercentHandler(components, pageY) {
+		var splitPaneHeight = components.splitPane.offsetHeight,
+			lastComponentMinHeight = minHeight(components.last),
+			maxLastComponentHeight = splitPaneHeight - minHeight(components.first) - components.divider.offsetHeight,
+			bottomOffset = components.last.offsetHeight + pageY;
+		return function(event) {
+			event.preventDefault && event.preventDefault();
+			var bottom = Math.min(Math.max(lastComponentMinHeight, bottomOffset - pageYof(event)), maxLastComponentHeight);
+			setBottom(components.first, components.divider, components.last, (bottom / splitPaneHeight * 100) + '%');
+			$(components.splitPane).resize();
+		};
+	}
+
+	function fixedLeftHandler(components, pageX) {
+		var firstComponentMinWidth = minWidth(components.first),
+			maxFirstComponentWidth = components.splitPane.offsetWidth - minWidth(components.last) - components.divider.offsetWidth,
+			leftOffset = components.divider.offsetLeft - pageX;
+		return function(event) {
+			event.preventDefault && event.preventDefault();
+			var left = newLeft(firstComponentMinWidth, maxFirstComponentWidth, leftOffset + pageXof(event));
+			setLeft(components.first, components.divider, components.last, left + 'px');
+			$(components.splitPane).resize();
+		};
+	}
+
+	function fixedRightHandler(components, pageX) {
+		var lastComponentMinWidth = minWidth(components.last),
+			maxLastComponentWidth = components.splitPane.offsetWidth - minWidth(components.first) - components.divider.offsetWidth,
+			rightOffset = components.last.offsetWidth + pageX;
+		return function(event) {
+			event.preventDefault && event.preventDefault();
+			var right = Math.min(Math.max(lastComponentMinWidth, rightOffset - pageXof(event)), maxLastComponentWidth);
+			setRight(components.first, components.divider, components.last, right + 'px');
+			$(components.splitPane).resize();
+		};
+	}
+
+	function verticalPercentHandler(components, pageX) {
+		var splitPaneWidth = components.splitPane.offsetWidth,
+			lastComponentMinWidth = minWidth(components.last),
+			maxLastComponentWidth = splitPaneWidth - minWidth(components.first) - components.divider.offsetWidth,
+			rightOffset = components.last.offsetWidth + pageX;
+		return function(event) {
+			event.preventDefault && event.preventDefault();
+			var right = Math.min(Math.max(lastComponentMinWidth, rightOffset - pageXof(event)), maxLastComponentWidth);
+			setRight(components.first, components.divider, components.last, (right / splitPaneWidth * 100) + '%');
+			$(components.splitPane).resize();
+		};
+	}
+
+	function getComponents($splitPane) {
+		return {
+			splitPane: $splitPane[0],
+			first: $splitPane.children('.split-pane-component:first')[0],
+			divider: $splitPane.children('.split-pane-divider')[0],
+			last: $splitPane.children('.split-pane-component:last')[0]
+		};
 	}
 
 	function pageXof(event) {
@@ -259,6 +345,13 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 		return parseInt($(element).css('min-width')) || 0;
 	}
 
+	function newTop(firstComponentMinHeight, maxFirstComponentHeight, value) {
+		return Math.min(Math.max(firstComponentMinHeight, value), maxFirstComponentHeight);
+	}
+
+	function newLeft(firstComponentMinWidth, maxFirstComponentWidth, value) {
+		return Math.min(Math.max(firstComponentMinWidth, value), maxFirstComponentWidth);
+	}
 	function setTop(firstComponent, divider, lastComponent, top) {
 		firstComponent.style.height = top;
 		divider.style.top = top;

@@ -34,12 +34,18 @@
 			#right-component {
 				width: 10em;
 			}
-			
+
 		</style>
 
 		<script>
 			$(function() {
 				$('div.split-pane').splitPane();
+				$('button:first').on('click', function() {
+					$('div.split-pane').splitPane('lastComponentSize', 150);
+				});
+				$('button:last').on('click', function() {
+					$('div.split-pane').splitPane('firstComponentSize', 300);
+				});
 			});
 		</script>
 	</head>
@@ -49,6 +55,7 @@
 				<div class="split-pane-component" id="left-component">
 					<div class="pretty-split-pane-component-inner"><!-- This div is added for styling purposes only. It's not part of the split-pane plugin. -->
 						<p>This split pane component is dynamic: when re-sizing the browser window, the width will adjust.</p>
+						<p><button>Set last component size to 150px</button></p>
 					</div>
 				</div>
 				<div class="split-pane-divider" id="my-divider"></div>
@@ -62,10 +69,10 @@
 							You can, however, re-size this component by dragging the divider, and it will adjust if
 							the left component reaches it's <code>min-width</code> (<code>10em</code> in this example).
 						</p>
+						<p><button>Set first component size to 300px</button></p>
 					</div>
 				</div>
 			</div>
 		</div>
 	</body>
 </html>
-

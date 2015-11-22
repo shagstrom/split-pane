@@ -19,14 +19,13 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 		var $splitPanes = this;
 		$splitPanes.each(setMinHeightAndMinWidth);
 		$splitPanes.append('<div class="split-pane-resize-shim">');
-		var eventType = ('ontouchstart' in document) ? 'touchstart' : 'mousedown';
 		$splitPanes.children('.split-pane-divider').html('<div class="split-pane-divider-inner"></div>');
-		$splitPanes.children('.split-pane-divider').bind(eventType, mousedownHandler);
+		$splitPanes.children('.split-pane-divider').on('touchstart mousedown', mousedownHandler);
 		setTimeout(function() {
 			// Doing this later because of an issue with Chrome (v23.0.1271.64) returning split-pane width = 0
 			// and triggering multiple resize events when page is being opened from an <a target="_blank"> .
 			$splitPanes.each(function() {
-				$(this).bind('_splitpaneparentresize', createParentresizeHandler($(this)));
+				$(this).on('_splitpaneparentresize', createParentresizeHandler($(this)));
 			});
 			$(window).trigger('resize');
 		}, 100);
@@ -104,11 +103,11 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 					event.stopPropagation();
 				}
 			});
-			$(parent).bind('resize', $(this).data(SPLITPANERESIZE_HANDLER));
+			$(parent).on('resize', $(this).data(SPLITPANERESIZE_HANDLER));
 		},
 		teardown: function(namespaces) {
 			var parent = $(this).parent().closest('.split-pane')[0] || window;
-			$(parent).unbind('resize', $(this).data(SPLITPANERESIZE_HANDLER));
+			$(parent).off('resize', $(this).data(SPLITPANERESIZE_HANDLER));
 			$(this).removeData(SPLITPANERESIZE_HANDLER);
 		}
 	};
@@ -126,21 +125,18 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	}
 
 	function mousedownHandler(event) {
-		var isTouchEvent = event.type.match(/^touch/),
-			moveEvent = isTouchEvent ? 'touchmove' : 'mousemove',
-			endEvent = isTouchEvent? 'touchend' : 'mouseup',
-			$divider = $(this),
+		var $divider = $(this),
 			$splitPane = $divider.parent(),
 			$resizeShim = $divider.siblings('.split-pane-resize-shim');
 		$resizeShim.show();
 		$divider.addClass('dragged');
-		if (isTouchEvent) {
+		if (event.type.match(/^touch/)) {
 			$divider.addClass('touch');
 		}
 		var moveEventHandler = createMousemove($splitPane, pageXof(event), pageYof(event));
-		$(document).on(moveEvent, moveEventHandler);
-		$(document).one(endEvent, function(event) {
-			$(document).unbind(moveEvent, moveEventHandler);
+		$(document).on('touchmove mousemove', moveEventHandler);
+		$(document).one('touchend mouseup', function(event) {
+			$(document).off('touchmove mousemove', moveEventHandler);
 			$divider.removeClass('dragged touch');
 			$resizeShim.hide();
 		});

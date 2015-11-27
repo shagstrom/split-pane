@@ -114,13 +114,11 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 
 	function setMinHeightAndMinWidth() {
 		var $splitPane = $(this),
-			$firstComponent = $splitPane.children('.split-pane-component:first'),
-			$divider = $splitPane.children('.split-pane-divider'),
-			$lastComponent = $splitPane.children('.split-pane-component:last');
+			components = getComponents($splitPane);
 		if ($splitPane.is('.fixed-top, .fixed-bottom, .horizontal-percent')) {
-			$splitPane.css('min-height', (minHeight($firstComponent) + minHeight($lastComponent) + $divider.height()) + 'px');
+			$splitPane.css('min-height', (minHeight(components.first) + minHeight(components.last) + $(components.divider).height()) + 'px');
 		} else {
-			$splitPane.css('min-width', (minWidth($firstComponent) + minWidth($lastComponent) + $divider.width()) + 'px');
+			$splitPane.css('min-width', (minWidth(components.first) + minWidth(components.last) + $(components.divider).width()) + 'px');
 		}
 	}
 
@@ -143,70 +141,67 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	}
 
 	function createParentresizeHandler($splitPane) {
-		var splitPane = $splitPane[0],
-			firstComponent = $splitPane.children('.split-pane-component:first')[0],
-			divider = $splitPane.children('.split-pane-divider')[0],
-			lastComponent = $splitPane.children('.split-pane-component:last')[0];
+		var components = getComponents($splitPane);
 		if ($splitPane.is('.fixed-top')) {
 			return function(event) {
-				var lastComponentMinHeight = minHeight(lastComponent),
-					maxfirstComponentHeight = splitPane.offsetHeight - lastComponentMinHeight - divider.offsetHeight;
-				if (firstComponent.offsetHeight > maxfirstComponentHeight) {
-					setTop(firstComponent, divider, lastComponent, maxfirstComponentHeight + 'px');
+				var lastComponentMinHeight = minHeight(components.last),
+					maxfirstComponentHeight = components.splitPane.offsetHeight - lastComponentMinHeight -  components.divider.offsetHeight;
+				if (components.first.offsetHeight > maxfirstComponentHeight) {
+					setTop(components.first,  components.divider, components.last, maxfirstComponentHeight + 'px');
 				}
 				$splitPane.resize();
 			};
 		} else if ($splitPane.is('.fixed-bottom')) {
 			return function(event) {
-				var firstComponentMinHeight = minHeight(firstComponent),
-					maxLastComponentHeight = splitPane.offsetHeight - firstComponentMinHeight - divider.offsetHeight;
-				if (lastComponent.offsetHeight > maxLastComponentHeight) {
-					setBottom(firstComponent, divider, lastComponent, maxLastComponentHeight + 'px')
+				var firstComponentMinHeight = minHeight(components.first),
+					maxLastComponentHeight = components.splitPane.offsetHeight - firstComponentMinHeight -  components.divider.offsetHeight;
+				if (components.last.offsetHeight > maxLastComponentHeight) {
+					setBottom(components.first,  components.divider, components.last, maxLastComponentHeight + 'px')
 				}
 				$splitPane.resize();
 			};
 		} else if ($splitPane.is('.horizontal-percent')) {
 			return function(event) {
-				var lastComponentMinHeight = minHeight(lastComponent),
-					firstComponentMinHeight = minHeight(firstComponent),
-					maxLastComponentHeight = splitPane.offsetHeight - firstComponentMinHeight - divider.offsetHeight;
-				if (lastComponent.offsetHeight > maxLastComponentHeight) {
-					setBottom(firstComponent, divider, lastComponent, (maxLastComponentHeight / splitPane.offsetHeight * 100) + '%');
+				var lastComponentMinHeight = minHeight(components.last),
+					firstComponentMinHeight = minHeight(components.first),
+					maxLastComponentHeight = components.splitPane.offsetHeight - firstComponentMinHeight -  components.divider.offsetHeight;
+				if (components.last.offsetHeight > maxLastComponentHeight) {
+					setBottom(components.first, components.divider, components.last, (maxLastComponentHeight / components.splitPane.offsetHeight * 100) + '%');
 				} else {
-					if (splitPane.offsetHeight - firstComponent.offsetHeight - divider.offsetHeight < lastComponentMinHeight) {
-						setBottom(firstComponent, divider, lastComponent, (lastComponentMinHeight / splitPane.offsetHeight * 100) + '%');
+					if (components.splitPane.offsetHeight - components.first.offsetHeight -  components.divider.offsetHeight < lastComponentMinHeight) {
+						setBottom(components.first,  components.divider, components.last, (lastComponentMinHeight / components.splitPane.offsetHeight * 100) + '%');
 					}
 				}
 				$splitPane.resize();
 			};
 		} else if ($splitPane.is('.fixed-left')) {
 			return function(event) {
-				var lastComponentMinWidth = minWidth(lastComponent),
-					maxFirstComponentWidth = splitPane.offsetWidth - lastComponentMinWidth - divider.offsetWidth;
-				if (firstComponent.offsetWidth > maxFirstComponentWidth) {
-					setLeft(firstComponent, divider, lastComponent, maxFirstComponentWidth + 'px');
+				var lastComponentMinWidth = minWidth(components.last),
+					maxFirstComponentWidth = components.splitPane.offsetWidth - lastComponentMinWidth -  components.divider.offsetWidth;
+				if (components.first.offsetWidth > maxFirstComponentWidth) {
+					setLeft(components.first,  components.divider, components.last, maxFirstComponentWidth + 'px');
 				}
 				$splitPane.resize();
 			};
 		} else if ($splitPane.is('.fixed-right')) {
 			return function(event) {
-				var firstComponentMinWidth = minWidth(firstComponent),
-					maxLastComponentWidth = splitPane.offsetWidth - firstComponentMinWidth - divider.offsetWidth;
-				if (lastComponent.offsetWidth > maxLastComponentWidth) {
-					setRight(firstComponent, divider, lastComponent, maxLastComponentWidth + 'px');
+				var firstComponentMinWidth = minWidth(components.first),
+					maxLastComponentWidth = components.splitPane.offsetWidth - firstComponentMinWidth -  components.divider.offsetWidth;
+				if (components.last.offsetWidth > maxLastComponentWidth) {
+					setRight(components.first,  components.divider, components.last, maxLastComponentWidth + 'px');
 				}
 				$splitPane.resize();
 			};
 		} else if ($splitPane.is('.vertical-percent')) {
 			return function(event) {
-				var lastComponentMinWidth = minWidth(lastComponent),
-					firstComponentMinWidth = minWidth(firstComponent),
-					maxLastComponentWidth = splitPane.offsetWidth - firstComponentMinWidth - divider.offsetWidth;
-				if (lastComponent.offsetWidth > maxLastComponentWidth) {
-					setRight(firstComponent, divider, lastComponent, (maxLastComponentWidth / splitPane.offsetWidth * 100) + '%');
+				var lastComponentMinWidth = minWidth(components.last),
+					firstComponentMinWidth = minWidth(components.first),
+					maxLastComponentWidth = components.splitPane.offsetWidth - firstComponentMinWidth -  components.divider.offsetWidth;
+				if (components.last.offsetWidth > maxLastComponentWidth) {
+					setRight(components.first,  components.divider, components.last, (maxLastComponentWidth / components.splitPane.offsetWidth * 100) + '%');
 				} else {
-					if (splitPane.offsetWidth - firstComponent.offsetWidth - divider.offsetWidth < lastComponentMinWidth) {
-						setRight(firstComponent, divider, lastComponent, (lastComponentMinWidth / splitPane.offsetWidth * 100) + '%');
+					if (components.splitPane.offsetWidth - components.first.offsetWidth -  components.divider.offsetWidth < lastComponentMinWidth) {
+						setRight(components.first,  components.divider, components.last, (lastComponentMinWidth / components.splitPane.offsetWidth * 100) + '%');
 					}
 				}
 				$splitPane.resize();

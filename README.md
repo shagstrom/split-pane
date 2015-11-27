@@ -9,6 +9,21 @@ You can download split-pane.js and split-pane.css manually to you project or you
 
     bower install split-pane
 
+Split panes are initiated with
+
+    $(selector).splitPane();
+
+Split pane component min-height and min-width are supported, and the component size
+can be set programmatically with
+
+    $(selector).splitPane('firstComponentSize', 0);"
+
+or
+
+    $(selector).splitPane('lastComponentSize', 100);"
+
+Only pixel values are supported.
+
 Below is a basic example on how to use the plugin. Check out my [blog post](http://www.dreamchain.com/split-pane/) for some prettier examples.
 
 As you can see, I'm setting up component widths and divider position using css, not as options to the JS splitPane function. The reason for this is that I like things to look good even **before** the JavaScript kicks in.

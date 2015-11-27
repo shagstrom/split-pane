@@ -11,7 +11,7 @@ You can download split-pane.js and split-pane.css manually to you project or you
 
 Below is a basic example on how to use the plugin. Check out my [blog post](http://www.dreamchain.com/split-pane/) for some prettier examples.
 
-As you can see, I'm setting up component widths and divider position using css, not as options to the JS splitPane function. The reason for this is that I like things to look good even **before** the JavaScript kicks in. 
+As you can see, I'm setting up component widths and divider position using css, not as options to the JS splitPane function. The reason for this is that I like things to look good even **before** the JavaScript kicks in.
 
     <!DOCTYPE html>
     <html>
@@ -56,8 +56,8 @@ As you can see, I'm setting up component widths and divider position using css, 
     			<div class="split-pane-divider" id="my-divider"></div>
     			<div class="split-pane-component" id="right-component">
     				This is the right component
+                    <button onclick="$('div.split-pane').splitPane('firstComponentSize', 0);">Collapse first component</button>
     			</div>
     		</div>
     	</body>
     </html>
-    

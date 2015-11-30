@@ -24,7 +24,6 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	overflow: auto;
 	top: auto;
 	bottom: 0;
-	z-index: 1;
 }
 
 .split-pane.fixed-top > .split-pane-component:first-child,
@@ -42,7 +41,6 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	left: 0;
 	cursor: ns-resize;
 	cursor: n-resize\9;
-	z-index: 2;
 }
 
 .split-pane.fixed-top > .split-pane-divider > .split-pane-divider-inner,
@@ -66,7 +64,6 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	overflow: auto;
 	left: auto;
 	right: 0;
-	z-index: 1;
 }
 
 .split-pane.fixed-left > .split-pane-component:first-child,
@@ -84,7 +81,6 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	top: 0;
 	cursor: ew-resize;
 	cursor: w-resize\9;
-	z-index: 2;
 }
 
 .split-pane.fixed-left > .split-pane-divider > .split-pane-divider-inner,

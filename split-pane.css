@@ -1,6 +1,6 @@
 /*!
 
-Split Pane v0.6.0
+Split Pane v0.6.1
 
 Copyright (c) 2014 Simon Hagström
 
@@ -40,8 +40,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	position: absolute;
 	width: 100%;
 	left: 0;
-	cursor: ns-resize;
-	cursor: n-resize\9;
+	cursor: row-resize;
 	z-index: 2;
 }
 
@@ -82,8 +81,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	position: absolute;
 	height: 100%;
 	top: 0;
-	cursor: ew-resize;
-	cursor: w-resize\9;
+	cursor: col-resize;
 	z-index: 2;
 }
 
@@ -112,13 +110,11 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 .split-pane.fixed-left > .split-pane-resize-shim,
 .split-pane.fixed-right > .split-pane-resize-shim,
 .split-pane.vertical-percent > .split-pane-resize-shim {
-	cursor: ew-resize;
-	cursor: w-resize\9;
+	cursor: col-resize;
 }
 
 .split-pane.fixed-top > .split-pane-resize-shim,
 .split-pane.fixed-bottom > .split-pane-resize-shim,
 .split-pane.horizontal-percent > .split-pane-resize-shim {
-	cursor: ns-resize;
-	cursor: n-resize\9;
+	cursor: row-resize;
 }

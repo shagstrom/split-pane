@@ -147,7 +147,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				var lastComponentMinHeight = minHeight(components.last),
 					maxfirstComponentHeight = components.splitPane.offsetHeight - lastComponentMinHeight -  components.divider.offsetHeight;
 				if (components.first.offsetHeight > maxfirstComponentHeight) {
-					setTop(components.first,  components.divider, components.last, maxfirstComponentHeight + 'px');
+					setTop(components, maxfirstComponentHeight + 'px');
 				}
 				$splitPane.resize();
 			};
@@ -156,7 +156,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				var firstComponentMinHeight = minHeight(components.first),
 					maxLastComponentHeight = components.splitPane.offsetHeight - firstComponentMinHeight -  components.divider.offsetHeight;
 				if (components.last.offsetHeight > maxLastComponentHeight) {
-					setBottom(components.first,  components.divider, components.last, maxLastComponentHeight + 'px')
+					setBottom(components, maxLastComponentHeight + 'px')
 				}
 				$splitPane.resize();
 			};
@@ -166,10 +166,10 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 					firstComponentMinHeight = minHeight(components.first),
 					maxLastComponentHeight = components.splitPane.offsetHeight - firstComponentMinHeight -  components.divider.offsetHeight;
 				if (components.last.offsetHeight > maxLastComponentHeight) {
-					setBottom(components.first, components.divider, components.last, (maxLastComponentHeight / components.splitPane.offsetHeight * 100) + '%');
+					setBottom(components, (maxLastComponentHeight / components.splitPane.offsetHeight * 100) + '%');
 				} else {
 					if (components.splitPane.offsetHeight - components.first.offsetHeight -  components.divider.offsetHeight < lastComponentMinHeight) {
-						setBottom(components.first,  components.divider, components.last, (lastComponentMinHeight / components.splitPane.offsetHeight * 100) + '%');
+						setBottom(components, (lastComponentMinHeight / components.splitPane.offsetHeight * 100) + '%');
 					}
 				}
 				$splitPane.resize();
@@ -179,7 +179,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				var lastComponentMinWidth = minWidth(components.last),
 					maxFirstComponentWidth = components.splitPane.offsetWidth - lastComponentMinWidth -  components.divider.offsetWidth;
 				if (components.first.offsetWidth > maxFirstComponentWidth) {
-					setLeft(components.first,  components.divider, components.last, maxFirstComponentWidth + 'px');
+					setLeft(components, maxFirstComponentWidth + 'px');
 				}
 				$splitPane.resize();
 			};
@@ -188,7 +188,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				var firstComponentMinWidth = minWidth(components.first),
 					maxLastComponentWidth = components.splitPane.offsetWidth - firstComponentMinWidth -  components.divider.offsetWidth;
 				if (components.last.offsetWidth > maxLastComponentWidth) {
-					setRight(components.first,  components.divider, components.last, maxLastComponentWidth + 'px');
+					setRight(components, maxLastComponentWidth + 'px');
 				}
 				$splitPane.resize();
 			};
@@ -198,10 +198,10 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 					firstComponentMinWidth = minWidth(components.first),
 					maxLastComponentWidth = components.splitPane.offsetWidth - firstComponentMinWidth -  components.divider.offsetWidth;
 				if (components.last.offsetWidth > maxLastComponentWidth) {
-					setRight(components.first,  components.divider, components.last, (maxLastComponentWidth / components.splitPane.offsetWidth * 100) + '%');
+					setRight(components, (maxLastComponentWidth / components.splitPane.offsetWidth * 100) + '%');
 				} else {
 					if (components.splitPane.offsetWidth - components.first.offsetWidth -  components.divider.offsetWidth < lastComponentMinWidth) {
-						setRight(components.first,  components.divider, components.last, (lastComponentMinWidth / components.splitPane.offsetWidth * 100) + '%');
+						setRight(components, (lastComponentMinWidth / components.splitPane.offsetWidth * 100) + '%');
 					}
 				}
 				$splitPane.resize();
@@ -232,7 +232,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 			topOffset = components.divider.offsetTop - pageY;
 		return function(event) {
 			var top = newTop(firstComponentMinHeight, maxFirstComponentHeight, topOffset + pageYof(event));
-			setTop(components.first, components.divider, components.last, top + 'px');
+			setTop(components, top + 'px');
 			$(components.splitPane).resize();
 		};
 	}
@@ -244,7 +244,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 		return function(event) {
 			event.preventDefault && event.preventDefault();
 			var bottom = Math.min(Math.max(lastComponentMinHeight, bottomOffset - pageYof(event)), maxLastComponentHeight);
-			setBottom(components.first, components.divider, components.last, bottom + 'px');
+			setBottom(components, bottom + 'px');
 			$(components.splitPane).resize();
 		};
 	}
@@ -257,7 +257,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 		return function(event) {
 			event.preventDefault && event.preventDefault();
 			var bottom = Math.min(Math.max(lastComponentMinHeight, bottomOffset - pageYof(event)), maxLastComponentHeight);
-			setBottom(components.first, components.divider, components.last, (bottom / splitPaneHeight * 100) + '%');
+			setBottom(components, (bottom / splitPaneHeight * 100) + '%');
 			$(components.splitPane).resize();
 		};
 	}
@@ -269,7 +269,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 		return function(event) {
 			event.preventDefault && event.preventDefault();
 			var left = newLeft(firstComponentMinWidth, maxFirstComponentWidth, leftOffset + pageXof(event));
-			setLeft(components.first, components.divider, components.last, left + 'px');
+			setLeft(components, left + 'px');
 			$(components.splitPane).resize();
 		};
 	}
@@ -281,7 +281,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 		return function(event) {
 			event.preventDefault && event.preventDefault();
 			var right = Math.min(Math.max(lastComponentMinWidth, rightOffset - pageXof(event)), maxLastComponentWidth);
-			setRight(components.first, components.divider, components.last, right + 'px');
+			setRight(components, right + 'px');
 			$(components.splitPane).resize();
 		};
 	}
@@ -294,7 +294,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 		return function(event) {
 			event.preventDefault && event.preventDefault();
 			var right = Math.min(Math.max(lastComponentMinWidth, rightOffset - pageXof(event)), maxLastComponentWidth);
-			setRight(components.first, components.divider, components.last, (right / splitPaneWidth * 100) + '%');
+			setRight(components, (right / splitPaneWidth * 100) + '%');
 			$(components.splitPane).resize();
 		};
 	}
@@ -336,6 +336,14 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 		return parseInt($(element).css('min-width')) || 0;
 	}
 
+	function maxHeight(element) {
+		return parseInt($(element).css('max-height'));
+	}
+
+	function maxWidth(element) {
+		return parseInt($(element).css('max-width'));
+	}
+
 	function newTop(firstComponentMinHeight, maxFirstComponentHeight, value) {
 		return Math.min(Math.max(firstComponentMinHeight, value), maxFirstComponentHeight);
 	}
@@ -343,28 +351,28 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	function newLeft(firstComponentMinWidth, maxFirstComponentWidth, value) {
 		return Math.min(Math.max(firstComponentMinWidth, value), maxFirstComponentWidth);
 	}
-	function setTop(firstComponent, divider, lastComponent, top) {
-		firstComponent.style.height = top;
-		divider.style.top = top;
-		lastComponent.style.top = top;
+	function setTop(components, top) {
+		components.first.style.height = top;
+		components.divider.style.top = top;
+		components.last.style.top = top;
 	}
 
-	function setBottom(firstComponent, divider, lastComponent, bottom) {
-		firstComponent.style.bottom = bottom;
-		divider.style.bottom = bottom;
-		lastComponent.style.height = bottom;
+	function setBottom(components, bottom) {
+		components.first.style.bottom = bottom;
+		components.divider.style.bottom = bottom;
+		components.last.style.height = bottom;
 	}
 
-	function setLeft(firstComponent, divider, lastComponent, left) {
-		firstComponent.style.width = left;
-		divider.style.left = left;
-		lastComponent.style.left = left;
+	function setLeft(components, left) {
+		components.first.style.width = left;
+		components.divider.style.left = left;
+		components.last.style.left = left;
 	}
 
-	function setRight(firstComponent, divider, lastComponent, right) {
-		firstComponent.style.right = right;
-		divider.style.right = right;
-		lastComponent.style.width = right;
+	function setRight(components, right) {
+		components.first.style.right = right;
+		components.divider.style.right = right;
+		components.last.style.width = right;
 	}
 
 })(jQuery);

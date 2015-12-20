@@ -1,6 +1,6 @@
 /*!
 
-Split Pane v0.6.1
+Split Pane v0.7.0
 
 Copyright (c) 2014 Simon Hagström
 
@@ -137,7 +137,18 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 			$(document).off('touchmove mousemove', moveEventHandler);
 			$divider.removeClass('dragged touch');
 			$resizeShim.hide();
+			$splitPane.trigger('dividerdragend', [ getComponentsSizes($splitPane) ]);
 		});
+		$splitPane.trigger('dividerdragstart', [ getComponentsSizes($splitPane) ]);
+	}
+
+	function getComponentsSizes($splitPane) {
+		var property = $splitPane.is('.fixed-top, .fixed-bottom, .horizontal-percent') ?
+			'height' : 'width';
+		return {
+			firstComponentSize: $splitPane.find('.split-pane-component:first')[property](),
+			lastComponentSize: $splitPane.find('.split-pane-component:last')[property]()
+		};
 	}
 
 	function createParentresizeHandler($splitPane) {

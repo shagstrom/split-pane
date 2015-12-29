@@ -1,6 +1,6 @@
 /*!
 
-Split Pane v0.7.0
+Split Pane v0.7.1
 
 Copyright (c) 2014 Simon Hagström
 
@@ -81,7 +81,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 		if (!method) {
 			method = 'init';
 		}
-		methods[method].apply(this, Array.prototype.splice.call(arguments, 1));
+		methods[method].apply(this, $.grep(arguments, function(it, i) { return i > 0; }));
 	};
 
 	var SPLITPANERESIZE_HANDLER = '_splitpaneparentresizeHandler';

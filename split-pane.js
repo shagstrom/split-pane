@@ -25,7 +25,14 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 			// Doing this later because of an issue with Chrome (v23.0.1271.64) returning split-pane width = 0
 			// and triggering multiple resize events when page is being opened from an <a target="_blank"> .
 			$splitPanes.each(function() {
-				$(this).on('_splitpaneparentresize', createParentresizeHandler($(this)));
+				var internalHandler = createParentresizeHandler($(this)),
+					parent = $(this).parent().closest('.split-pane')[0] || window;
+				$(parent).on(parent === window ? 'resize' : 'splitpaneresize', function(event) {
+					var target = event.target === document ? window : event.target;
+					if (target === parent) {
+						internalHandler(event)
+					}
+				});
 			});
 			$(window).trigger('resize');
 		}, 100);
@@ -78,38 +85,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	};
 
 	$.fn.splitPane = function(method) {
-		if (!method) {
-			method = 'init';
-		}
-		methods[method].apply(this, $.grep(arguments, function(it, i) { return i > 0; }));
-	};
-
-	var SPLITPANERESIZE_HANDLER = '_splitpaneparentresizeHandler';
-
-	/**
-	 * A special event that will "capture" a resize event from the parent split-pane or window.
-	 * The event will NOT propagate to grandchildren.
-	 */
-	$.event.special._splitpaneparentresize = {
-		setup: function(data, namespaces) {
-			var element = this,
-				parent = $(this).parent().closest('.split-pane')[0] || window;
-			$(this).data(SPLITPANERESIZE_HANDLER, function(event) {
-				var target = event.target === document ? window : event.target;
-				if (target === parent) {
-					event.type = "_splitpaneparentresize";
-					$.event.dispatch.apply(element, arguments);
-				} else {
-					event.stopPropagation();
-				}
-			});
-			$(parent).on('resize', $(this).data(SPLITPANERESIZE_HANDLER));
-		},
-		teardown: function(namespaces) {
-			var parent = $(this).parent().closest('.split-pane')[0] || window;
-			$(parent).off('resize', $(this).data(SPLITPANERESIZE_HANDLER));
-			$(this).removeData(SPLITPANERESIZE_HANDLER);
-		}
+		methods[method || 'init'].apply(this, $.grep(arguments, function(it, i) { return i > 0; }));
 	};
 
 	function setMinHeightAndMinWidth() {
@@ -160,7 +136,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				if (components.first.offsetHeight > maxfirstComponentHeight) {
 					setTop(components, maxfirstComponentHeight + 'px');
 				}
-				$splitPane.resize();
+				$splitPane.trigger('splitpaneresize');
 			};
 		} else if ($splitPane.is('.fixed-bottom')) {
 			return function(event) {
@@ -169,7 +145,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				if (components.last.offsetHeight > maxLastComponentHeight) {
 					setBottom(components, maxLastComponentHeight + 'px')
 				}
-				$splitPane.resize();
+				$splitPane.trigger('splitpaneresize');
 			};
 		} else if ($splitPane.is('.horizontal-percent')) {
 			return function(event) {
@@ -183,7 +159,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 						setBottom(components, (lastComponentMinHeight / components.splitPane.offsetHeight * 100) + '%');
 					}
 				}
-				$splitPane.resize();
+				$splitPane.trigger('splitpaneresize');
 			};
 		} else if ($splitPane.is('.fixed-left')) {
 			return function(event) {
@@ -192,7 +168,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				if (components.first.offsetWidth > maxFirstComponentWidth) {
 					setLeft(components, maxFirstComponentWidth + 'px');
 				}
-				$splitPane.resize();
+				$splitPane.trigger('splitpaneresize');
 			};
 		} else if ($splitPane.is('.fixed-right')) {
 			return function(event) {
@@ -201,7 +177,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				if (components.last.offsetWidth > maxLastComponentWidth) {
 					setRight(components, maxLastComponentWidth + 'px');
 				}
-				$splitPane.resize();
+				$splitPane.trigger('splitpaneresize');
 			};
 		} else if ($splitPane.is('.vertical-percent')) {
 			return function(event) {
@@ -215,7 +191,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 						setRight(components, (lastComponentMinWidth / components.splitPane.offsetWidth * 100) + '%');
 					}
 				}
-				$splitPane.resize();
+				$splitPane.trigger('splitpaneresize');
 			};
 		}
 	}
@@ -244,7 +220,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 		return function(event) {
 			var top = newTop(firstComponentMinHeight, maxFirstComponentHeight, topOffset + pageYof(event));
 			setTop(components, top + 'px');
-			$(components.splitPane).resize();
+			$(components.splitPane).trigger('splitpaneresize');
 		};
 	}
 
@@ -256,7 +232,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 			event.preventDefault && event.preventDefault();
 			var bottom = Math.min(Math.max(lastComponentMinHeight, bottomOffset - pageYof(event)), maxLastComponentHeight);
 			setBottom(components, bottom + 'px');
-			$(components.splitPane).resize();
+			$(components.splitPane).trigger('splitpaneresize');
 		};
 	}
 
@@ -269,7 +245,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 			event.preventDefault && event.preventDefault();
 			var bottom = Math.min(Math.max(lastComponentMinHeight, bottomOffset - pageYof(event)), maxLastComponentHeight);
 			setBottom(components, (bottom / splitPaneHeight * 100) + '%');
-			$(components.splitPane).resize();
+			$(components.splitPane).trigger('splitpaneresize');
 		};
 	}
 
@@ -281,7 +257,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 			event.preventDefault && event.preventDefault();
 			var left = newLeft(firstComponentMinWidth, maxFirstComponentWidth, leftOffset + pageXof(event));
 			setLeft(components, left + 'px');
-			$(components.splitPane).resize();
+			$(components.splitPane).trigger('splitpaneresize');
 		};
 	}
 
@@ -293,7 +269,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 			event.preventDefault && event.preventDefault();
 			var right = Math.min(Math.max(lastComponentMinWidth, rightOffset - pageXof(event)), maxLastComponentWidth);
 			setRight(components, right + 'px');
-			$(components.splitPane).resize();
+			$(components.splitPane).trigger('splitpaneresize');
 		};
 	}
 
@@ -306,7 +282,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 			event.preventDefault && event.preventDefault();
 			var right = Math.min(Math.max(lastComponentMinWidth, rightOffset - pageXof(event)), maxLastComponentWidth);
 			setRight(components, (right / splitPaneWidth * 100) + '%');
-			$(components.splitPane).resize();
+			$(components.splitPane).trigger('splitpaneresize');
 		};
 	}
 

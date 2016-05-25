@@ -13,6 +13,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	height: 100%;
 	width: 100%;
 	overflow: hidden;
+	z-index: 0;
 }
 
 .split-pane.fixed-top > .split-pane-component,

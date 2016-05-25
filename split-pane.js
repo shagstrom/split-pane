@@ -90,6 +90,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	}
 
 	function mousedownHandler(event) {
+		event.preventDefault();
 		var $divider = $(this),
 			$splitPane = $divider.parent(),
 			$resizeShim = $divider.siblings('.split-pane-resize-shim');
@@ -221,6 +222,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 			maxFirstComponentHeight = components.splitPane.offsetHeight - minHeight(components.last) - components.divider.offsetHeight,
 			topOffset = components.divider.offsetTop - pageY;
 		return function(event) {
+			event.preventDefault && event.preventDefault();
 			var top = newTop(firstComponentMinHeight, maxFirstComponentHeight, topOffset + pageYof(event));
 			setTop(components, top + 'px');
 			$(components.splitPane).trigger('splitpaneresize');

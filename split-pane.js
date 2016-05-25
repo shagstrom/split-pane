@@ -24,16 +24,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 		setTimeout(function() {
 			// Doing this later because of an issue with Chrome (v23.0.1271.64) returning split-pane width = 0
 			// and triggering multiple resize events when page is being opened from an <a target="_blank"> .
-			$splitPanes.each(function() {
-				var internalHandler = createParentresizeHandler($(this)),
-					parent = $(this).parent().closest('.split-pane')[0] || window;
-				$(parent).on(parent === window ? 'resize' : 'splitpaneresize', function(event) {
-					var target = event.target === document ? window : event.target;
-					if (target === parent) {
-						internalHandler(event)
-					}
-				});
-			});
+			$splitPanes.each(attachResizeHandler);
 			$(window).trigger('resize');
 		}, 100);
 	};
@@ -127,6 +118,18 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 		};
 	}
 
+	function attachResizeHandler() {
+		var $splitPane = $(this),
+			internalHandler = createParentresizeHandler($splitPane),
+			parent = $splitPane.parent().closest('.split-pane')[0] || window;
+		$(parent).on(parent === window ? 'resize' : 'splitpaneresize', function(event) {
+			var target = event.target === document ? window : event.target;
+			if (target === parent) {
+				internalHandler(event);
+			}
+		});
+	}
+
 	function createParentresizeHandler($splitPane) {
 		var components = getComponents($splitPane);
 		if ($splitPane.is('.fixed-top')) {
@@ -143,7 +146,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				var firstComponentMinHeight = minHeight(components.first),
 					maxLastComponentHeight = components.splitPane.offsetHeight - firstComponentMinHeight -  components.divider.offsetHeight;
 				if (components.last.offsetHeight > maxLastComponentHeight) {
-					setBottom(components, maxLastComponentHeight + 'px')
+					setBottom(components, maxLastComponentHeight + 'px');
 				}
 				$splitPane.trigger('splitpaneresize');
 			};
@@ -316,19 +319,19 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	}
 
 	function minHeight(element) {
-		return parseInt($(element).css('min-height')) || 0;
+		return parseInt($(element).css('min-height'), 10) || 0;
 	}
 
 	function minWidth(element) {
-		return parseInt($(element).css('min-width')) || 0;
+		return parseInt($(element).css('min-width'), 10) || 0;
 	}
 
 	function maxHeight(element) {
-		return parseInt($(element).css('max-height'));
+		return parseInt($(element).css('max-height'), 10);
 	}
 
 	function maxWidth(element) {
-		return parseInt($(element).css('max-width'));
+		return parseInt($(element).css('max-width'), 10);
 	}
 
 	function newTop(firstComponentMinHeight, maxFirstComponentHeight, value) {

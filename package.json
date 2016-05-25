@@ -1,7 +1,7 @@
 {
   "name": "@shagstrom/split-pane",
   "main": "split-pane.js",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "homepage": "https://github.com/shagstrom/split-pane",
   "repository" :{
     "type" : "git",

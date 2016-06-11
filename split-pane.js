@@ -18,7 +18,6 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	methods.init = function() {
 		var $splitPanes = this;
 		$splitPanes.each(setMinHeightAndMinWidth);
-		$splitPanes.append('<div class="split-pane-resize-shim">');
 		$splitPanes.children('.split-pane-divider').html('<div class="split-pane-divider-inner"></div>');
 		$splitPanes.children('.split-pane-divider').on('touchstart mousedown', mousedownHandler);
 		setTimeout(function() {
@@ -92,9 +91,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 	function mousedownHandler(event) {
 		event.preventDefault();
 		var $divider = $(this),
-			$splitPane = $divider.parent(),
-			$resizeShim = $divider.siblings('.split-pane-resize-shim');
-		$resizeShim.show();
+			$splitPane = $divider.parent();
 		$divider.addClass('dragged');
 		if (event.type.match(/^touch/)) {
 			$divider.addClass('touch');
@@ -104,7 +101,6 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 		$(document).one('touchend mouseup', function(event) {
 			$(document).off('touchmove mousemove', moveEventHandler);
 			$divider.removeClass('dragged touch');
-			$resizeShim.hide();
 			$splitPane.trigger('dividerdragend', [ getComponentsSizes($splitPane) ]);
 		});
 		$splitPane.trigger('dividerdragstart', [ getComponentsSizes($splitPane) ]);

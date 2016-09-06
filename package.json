@@ -11,6 +11,6 @@
   "description": "jQuery Split Pane plugin",
   "license": "MIT",
   "dependencies":{
-    "jquery": "^1.11.1"
+    "jquery": ">=1.11.1 < 3.0.0"
   }
 }

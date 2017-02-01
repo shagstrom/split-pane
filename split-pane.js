@@ -1,6 +1,6 @@
 /*!
 
-Split Pane v0.9.3
+Split Pane v0.9.4
 
 Copyright (c) 2014 - 2016 Simon Hagström
 
@@ -110,8 +110,8 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 		var property = $splitPane.is('.fixed-top, .fixed-bottom, .horizontal-percent') ?
 			'height' : 'width';
 		return {
-			firstComponentSize: $splitPane.find('.split-pane-component:first')[property](),
-			lastComponentSize: $splitPane.find('.split-pane-component:last')[property]()
+			firstComponentSize: parseInt($splitPane.find('.split-pane-component:first').css(property), 10),
+			lastComponentSize: parseInt($splitPane.find('.split-pane-component:last').css(property), 10)
 		};
 	}
 
@@ -136,7 +136,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				if (components.first.offsetHeight > maxfirstComponentHeight) {
 					setTop(components, maxfirstComponentHeight + 'px');
 				}
-				$splitPane.trigger('splitpaneresize');
+				$splitPane.trigger('splitpaneresize', [ getComponentsSizes($splitPane) ]);
 			};
 		} else if ($splitPane.is('.fixed-bottom')) {
 			return function(event) {
@@ -145,7 +145,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				if (components.last.offsetHeight > maxLastComponentHeight) {
 					setBottom(components, maxLastComponentHeight + 'px');
 				}
-				$splitPane.trigger('splitpaneresize');
+				$splitPane.trigger('splitpaneresize', [ getComponentsSizes($splitPane) ]);
 			};
 		} else if ($splitPane.is('.horizontal-percent')) {
 			return function(event) {
@@ -159,7 +159,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 						setBottom(components, (lastComponentMinHeight / components.splitPane.offsetHeight * 100) + '%');
 					}
 				}
-				$splitPane.trigger('splitpaneresize');
+				$splitPane.trigger('splitpaneresize', [ getComponentsSizes($splitPane) ]);
 			};
 		} else if ($splitPane.is('.fixed-left')) {
 			return function(event) {
@@ -168,7 +168,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				if (components.first.offsetWidth > maxFirstComponentWidth) {
 					setLeft(components, maxFirstComponentWidth + 'px');
 				}
-				$splitPane.trigger('splitpaneresize');
+				$splitPane.trigger('splitpaneresize', [ getComponentsSizes($splitPane) ]);
 			};
 		} else if ($splitPane.is('.fixed-right')) {
 			return function(event) {
@@ -177,7 +177,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 				if (components.last.offsetWidth > maxLastComponentWidth) {
 					setRight(components, maxLastComponentWidth + 'px');
 				}
-				$splitPane.trigger('splitpaneresize');
+				$splitPane.trigger('splitpaneresize', [ getComponentsSizes($splitPane) ]);
 			};
 		} else if ($splitPane.is('.vertical-percent')) {
 			return function(event) {
@@ -191,7 +191,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 						setRight(components, (lastComponentMinWidth / components.splitPane.offsetWidth * 100) + '%');
 					}
 				}
-				$splitPane.trigger('splitpaneresize');
+				$splitPane.trigger('splitpaneresize', [ getComponentsSizes($splitPane) ]);
 			};
 		}
 	}
@@ -221,7 +221,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 			event.preventDefault && event.preventDefault();
 			var top = newTop(firstComponentMinHeight, maxFirstComponentHeight, topOffset + pageYof(event));
 			setTop(components, top + 'px');
-			$(components.splitPane).trigger('splitpaneresize');
+			$(components.splitPane).trigger('splitpaneresize', [ getComponentsSizes($(components.splitPane)) ]);
 		};
 	}
 
@@ -233,7 +233,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 			event.preventDefault && event.preventDefault();
 			var bottom = Math.min(Math.max(lastComponentMinHeight, bottomOffset - pageYof(event)), maxLastComponentHeight);
 			setBottom(components, bottom + 'px');
-			$(components.splitPane).trigger('splitpaneresize');
+			$(components.splitPane).trigger('splitpaneresize', [ getComponentsSizes($(components.splitPane)) ]);
 		};
 	}
 
@@ -246,7 +246,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 			event.preventDefault && event.preventDefault();
 			var bottom = Math.min(Math.max(lastComponentMinHeight, bottomOffset - pageYof(event)), maxLastComponentHeight);
 			setBottom(components, (bottom / splitPaneHeight * 100) + '%');
-			$(components.splitPane).trigger('splitpaneresize');
+			$(components.splitPane).trigger('splitpaneresize', [ getComponentsSizes($(components.splitPane)) ]);
 		};
 	}
 
@@ -258,7 +258,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 			event.preventDefault && event.preventDefault();
 			var left = newLeft(firstComponentMinWidth, maxFirstComponentWidth, leftOffset + pageXof(event));
 			setLeft(components, left + 'px');
-			$(components.splitPane).trigger('splitpaneresize');
+			$(components.splitPane).trigger('splitpaneresize', [ getComponentsSizes($(components.splitPane)) ]);
 		};
 	}
 
@@ -270,7 +270,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 			event.preventDefault && event.preventDefault();
 			var right = Math.min(Math.max(lastComponentMinWidth, rightOffset - pageXof(event)), maxLastComponentWidth);
 			setRight(components, right + 'px');
-			$(components.splitPane).trigger('splitpaneresize');
+			$(components.splitPane).trigger('splitpaneresize', [ getComponentsSizes($(components.splitPane)) ]);
 		};
 	}
 
@@ -283,7 +283,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 			event.preventDefault && event.preventDefault();
 			var right = Math.min(Math.max(lastComponentMinWidth, rightOffset - pageXof(event)), maxLastComponentWidth);
 			setRight(components, (right / splitPaneWidth * 100) + '%');
-			$(components.splitPane).trigger('splitpaneresize');
+			$(components.splitPane).trigger('splitpaneresize', [ getComponentsSizes($(components.splitPane)) ]);
 		};
 	}
 

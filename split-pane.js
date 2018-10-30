@@ -121,7 +121,7 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 			parent = $splitPane.parent().closest('.split-pane')[0] || window;
 		$(parent).on(parent === window ? 'resize' : 'splitpaneresize', function(event) {
 			var target = event.target === document ? window : event.target;
-			if (target === parent) {
+			if (target === parent && $($splitPane[0]).is(":visible")) {
 				internalHandler(event);
 			}
 		});

@@ -5,9 +5,9 @@ jQuery Split Pane plugin
 
 The plugin should work in IE8 and above as well as in Chrome, Safari and Firefox.
 
-You can download split-pane.js and split-pane.css manually to you project or you can install with bower:
+You can download split-pane.js and split-pane.css manually to you project or you can install with npm:
 
-    bower install split-pane
+    npm install split-pane
 
 Split panes are initiated with
 
